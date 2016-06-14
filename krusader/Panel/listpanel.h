@@ -210,6 +210,7 @@ protected:
     QPixmap currDragPix;
     QWidget *clientArea;
     QSplitter *splt;
+    //OK UrlRequester *origin;
     KUrlNavigator* urlNavigator;
     KrQuickSearch *quickSearch;
     QuickFilter *quickFilter;

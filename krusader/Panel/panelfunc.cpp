@@ -115,6 +115,7 @@ ListPanelFunc::~ListPanelFunc()
 
 void ListPanelFunc::urlEntered(const QUrl &url)
 {
+    //TODO
     panel->urlNavigator->setUrlEditable(false);
     openUrl(url, QString(), true);
 }
@@ -362,6 +363,7 @@ void ListPanelFunc::doRefresh()
         if (vfsP->vfs_refresh(u)) {
             // update the history and address bar, as the actual url might differ from the one requested
             history->setCurrentUrl(vfsP->vfs_getOrigin());
+            //OK panel->origin->setUrl(vfsP->vfs_getOrigin());
             panel->urlNavigator->setLocationUrl(vfsP->vfs_getOrigin());
             break; // we have a valid refreshed URL now
         }
@@ -386,6 +388,7 @@ void ListPanelFunc::doRefresh()
     }
     vfsP->vfs_setQuiet(false);
     panel->view->setNameToMakeCurrent(QString());
+    //OK panel->origin->setStartDir(vfsP->vfs_getOrigin());
 
     panel->setCursor(Qt::ArrowCursor);
 
@@ -399,8 +402,10 @@ void ListPanelFunc::doRefresh()
         if(isSyncing(url))
             panel->otherPanel()->gui->syncBrowseButton->setChecked(false);
         else if(urlManuallyEntered) {
+            //OK panel->origin->setUrl(url);
             panel->urlNavigator->setLocationUrl(url);
             if(panel == ACTIVE_PANEL)
+                //OK panel->origin->edit();
                 panel->editLocation();
         }
     }

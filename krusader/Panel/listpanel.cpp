@@ -189,14 +189,39 @@ ListPanel::ListPanel(QWidget *parent, AbstractPanelManager *manager, KConfigGrou
                                        "or add subfolder to the list."));
     ADD_WIDGET(bookmarksButton);
 
+    //OK origin input field
+//OK    QuickNavLineEdit *qnle = new QuickNavLineEdit(this);
+//OK    origin = new UrlRequester(qnle, this);
+//OK    origin->setWhatsThis(i18n("Use superb KDE file dialog to choose location."));
+//    origin->lineEdit()->installEventFilter(new LineEditUrlDropEventFilter(this));
+//OK    origin->lineEdit()->installEventFilter(this);
+//OK    origin->lineEdit()->setWhatsThis(i18n("Name of folder where you are. You can also "
+//OK                                          "enter name of desired location to move there. "
+//OK                                          "Use of Net protocols like ftp or fish is possible."));
+//OK    origin->setMode(KFile::Directory | KFile::ExistingOnly);
+//??  origin->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Minimum);
+//OK    connect(origin, SIGNAL(returnPressed(const QString&)), func, SLOT(urlEntered(const QString&)));
+//OK    connect(origin, SIGNAL(returnPressed(const QString&)), this, SLOT(slotFocusOnMe()));
+//??    connect(origin, SIGNAL(focusout()), func, SLOT(refresh()));
+//OK    connect(origin, SIGNAL(urlSelected(const QUrl &)), func, SLOT(urlEntered(const QUrl &)));
+//OK    connect(origin, SIGNAL(urlSelected(const QUrl &)), this, SLOT(slotFocusOnMe()));
+//OK    connect(this, SIGNAL(refreshPathLabel()), origin, SLOT(refresh()));
+//OK    ADD_WIDGET(origin);
     // url input field
     urlNavigator = new KUrlNavigator(new KFilePlacesModel(this), QUrl(), this);
     urlNavigator->setWhatsThis(i18n("Name of folder where you are. You can also "
                                     "enter name of desired location to move there. "
                                     "Use of Net protocols like ftp or fish is possible."));
     urlNavigator->editor()->installEventFilter(this);
+    // TODO not working, not really required
+    //connect(urlNavigator, SIGNAL(activated()), this, SLOT(slotFocusOnMe()));
     connect(urlNavigator, SIGNAL(returnPressed()), this, SLOT(slotFocusOnMe()));
     connect(urlNavigator, SIGNAL(urlChanged(QUrl)), func, SLOT(urlEntered(QUrl)));
+    //TODO dropping urls into the navigator
+//    connect(urlNavigator, SIGNAL(urlsDropped(KUrl,QDropEvent*)),
+//            this, SLOT(dropUrls(KUrl,QDropEvent*)));;
+    // TODO global settings
+    //urlNavigator->editor()->setCompletionMode(KGlobalSettings::Completion(settings->urlCompletionMode()));
     ADD_WIDGET(urlNavigator);
 
     // toolbar
@@ -258,6 +283,7 @@ ListPanel::ListPanel(QWidget *parent, AbstractPanelManager *manager, KConfigGrou
 
     // toolbar buttons
     cdOtherButton = new ActionButton(toolbar, this, _actions->actCdToOther, "=");
+    //TODO cdOtherButton->setFixedSize(20, origin->button()->height());
     toolbarLayout->addWidget(cdOtherButton);
 
     cdUpButton = new ActionButton(toolbar, this, _actions->actDirUp, "..");
@@ -313,6 +339,7 @@ ListPanel::ListPanel(QWidget *parent, AbstractPanelManager *manager, KConfigGrou
         QHBoxLayout *h = new QHBoxLayout;
         h->setContentsMargins(0, 0, 0, 0);
         h->setSpacing(0);
+        //OK h->addWidget(origin);
         h->addWidget(urlNavigator);
         h->addWidget(toolbar);
         h->addStretch();
@@ -361,6 +388,7 @@ ListPanel::~ListPanel()
     delete bookmarksButton;
     delete totals;
     delete quickSearch;
+    //OK delete origin;
     delete urlNavigator;
     delete cdRootButton;
     delete cdHomeButton;
@@ -484,6 +512,7 @@ bool ListPanel::eventFilter(QObject * watched, QEvent * e)
             }
         }
     }
+    //OK else if(e->type() == QEvent::KeyPress && origin->lineEdit() == watched) {
     else if(e->type() == QEvent::KeyPress && watched == urlNavigator->editor()) {
         QKeyEvent *ke = (QKeyEvent *)e;
         if (((ke->key() ==  Qt::Key_Down) && (ke->modifiers() == Qt::ControlModifier)) ||
@@ -550,12 +579,15 @@ void ListPanel::setButtons()
         cdHomeButton->setVisible(group.readEntry("Home Button Visible", _cdHome));
         cdUpButton->setVisible(group.readEntry("Up Button Visible", _cdUp));
         cdOtherButton->setVisible(group.readEntry("Equal Button Visible", _cdOther));
+        //OK origin->button()->setVisible(group.readEntry("Open Button Visible", _Open));
+        //TODO remove config
         syncBrowseButton->setVisible(group.readEntry("SyncBrowse Button Visible", _syncBrowseButton));
     } else {
         cdRootButton->hide();
         cdHomeButton->hide();
         cdUpButton->hide();
         cdOtherButton->hide();
+        //OK origin->button()->hide();
         syncBrowseButton->hide();
     }
 }
@@ -656,6 +688,7 @@ void ListPanel::slotFocusOnMe(bool focus)
         view->prepareForPassive();
     }
 
+    //OK origin->setActive(focus);
     urlNavigator->setActive(focus);
     refreshColors();
     emit refreshPathLabel();
@@ -697,6 +730,7 @@ void ListPanel::slotStartUpdate()
 
     if (func->files()->vfs_getType() == vfs::VFS_NORMAL)
         _realPath = virtualPath();
+    //OK this->origin->setUrl(virtualPath());
     if (urlNavigator->locationUrl() != virtualPath())
         urlNavigator->setLocationUrl(virtualPath());
     emit pathChanged(this);
@@ -1008,6 +1042,8 @@ void ListPanel::keyPressEvent(QKeyEvent *e)
 
     case Qt::Key_Up :
         if (e->modifiers() == Qt::ControlModifier) {   // give the keyboard focus to the url navigator
+            //OK origin->lineEdit()->setFocus();
+            //OK origin->lineEdit()->selectAll();
             editLocation();
             return ;
         } else
@@ -1084,6 +1120,7 @@ void ListPanel::slotJobStarted(KIO::Job* job)
 {
     // disable the parts of the panel we don't want touched
     status->setEnabled(false);
+    //OK origin->setEnabled(false);
     urlNavigator->setEnabled(false);
     cdRootButton->setEnabled(false);
     cdHomeButton->setEnabled(false);
@@ -1142,6 +1179,7 @@ void ListPanel::inlineRefreshListResult(KJob*)
     inlineRefreshJob = 0;
     // reenable everything
     status->setEnabled(true);
+    //OK origin->setEnabled(true);
     urlNavigator->setEnabled(true);
     cdRootButton->setEnabled(true);
     cdHomeButton->setEnabled(true);
@@ -1214,6 +1252,8 @@ void ListPanel::toggleSyncBrowse()
 
 void ListPanel::editLocation()
 {
+//OK    origin->lineEdit()->selectAll();
+//OK    origin->edit();
     urlNavigator->setUrlEditable(true);
     urlNavigator->setFocus();
     urlNavigator->editor()->lineEdit()->selectAll();
@@ -1256,6 +1296,11 @@ void ListPanel::restoreSettings(KConfigGroup cfg)
     }
 
     setJumpBack(func->history->currentUrl());
+
+    // TODO urlnavigator settings
+    //const GeneralSettings* settings = GeneralSettings::self();
+    //urlNavigator->setUrlEditable(settings->editableUrl());
+    //urlNavigator->setShowFullPath(settings->showFullPath());
 }
 
 void ListPanel::updatePopupPanel(KrViewItem *item)
@@ -1282,6 +1327,8 @@ void ListPanel::otherPanelChanged()
 
 void ListPanel::getFocusCandidates(QVector<QWidget*> &widgets)
 {
+//    if(origin->lineEdit()->isVisible())
+//        widgets << origin->lineEdit();
     if(urlNavigator->editor()->isVisible())
         widgets << urlNavigator->editor();
     if(view->widget()->isVisible())
