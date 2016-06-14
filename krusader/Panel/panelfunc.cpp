@@ -66,7 +66,6 @@ A
 #include "krerrordisplay.h"
 #include "listpanelactions.h"
 #include "quickfilter.h"
-#include "urlrequester.h"
 #include "../krglobal.h"
 #include "../krslots.h"
 #include "../kractions.h"
