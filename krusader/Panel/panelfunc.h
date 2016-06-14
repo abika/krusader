@@ -51,7 +51,6 @@ class ListPanelFunc : public QObject
 public slots:
     void execute(const QString&);
     void goInside(const QString&);
-    void urlEntered(const QString &url);
     void urlEntered(const QUrl &url);
     void openUrl(const QUrl &path, const QString& nameToMakeCurrent = QString(),
                  bool manuallyEntered = false);
