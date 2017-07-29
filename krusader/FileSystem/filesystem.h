@@ -28,6 +28,9 @@
 
 class FileItem;
 
+#include <QElapsedTimer>
+
+
 /**
  * An abstract filesystem. Use the implementations of this class for all file operations.
  *
@@ -160,6 +163,8 @@ signals:
     /// Emitted when an error occurred in this filesystem during refresh.
     void error(const QString &msg);
     /// Emitted when the content of a directory was changed by this filesystem.
+    // TODO advanced remove notifications
+    // void fileSystemChanged(const QUrl &directory, bool removed);
     void fileSystemChanged(const QUrl &directory, bool removed);
     /// Emitted when the information for the filesystem of the current directory changed.
     /// Information is either
@@ -188,6 +193,8 @@ protected:
     QUrl _currentDirectory; // the path or file the filesystem originates from.
     bool _isRefreshing;     // true if filesystem is busy with refreshing
     QPointer<QWidget> parentWindow;
+
+    QElapsedTimer timer;
 
 protected slots:
     /// Handle result after job (except when refreshing!) finished

@@ -124,6 +124,8 @@ void FileItem::setSize(KIO::filesize_t size)
     s_fileSizeCache.insert(m_url, new FileSize(size));
 }
 
+#include <QDebug>
+
 const QString &FileItem::getMime()
 {
     if (m_mimeType.isEmpty()) {
@@ -142,6 +144,7 @@ const QString &FileItem::getMime()
             if (m_mimeType == "inode/directory") {
                 // TODO view update needed? and does this ever happen?
                 m_isDir = true;
+                qDebug() << "MY TODO SUDDENlY ISDIR!";
             }
         }
 

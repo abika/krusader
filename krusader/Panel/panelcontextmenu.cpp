@@ -99,6 +99,8 @@ PanelContextMenu::PanelContextMenu(KrPanel *krPanel, QWidget *parent)
         allFilesAreDirs &= file->isDir();
     }
 
+    KFileItemListProperties capabilities(_items);
+
     if (files.empty()) {
         addCreateNewMenu();
         addSeparator();

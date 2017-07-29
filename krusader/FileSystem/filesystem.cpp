@@ -87,6 +87,9 @@ bool FileSystem::scanOrRefresh(const QUrl &directory, bool onlyScan)
 {
     qDebug() << "from current dir=" << _currentDirectory.toDisplayString()
              << "; to=" << directory.toDisplayString();
+
+    QElapsedTimer timer;
+    timer.start();
     if (_isRefreshing) {
         // NOTE: this does not happen (unless async)";
         return false;
@@ -127,11 +130,15 @@ bool FileSystem::scanOrRefresh(const QUrl &directory, bool onlyScan)
         return false;
     }
 
+    qDebug() << "MY TODO rework- refresh, time 1: " << timer.elapsed();
+
     emit scanDone(dirChange);
 
     clear(tempFileItems);
 
     updateFilesystemInfo();
+
+    qDebug() << "MY TODO rework- refresh, time 2: " << timer.elapsed();
 
     return true;
 }
@@ -313,6 +320,9 @@ void FileSystem::slotJobResult(KJob *job, bool refresh)
     if (refresh) {
         FileSystem::refresh();
     }
+
+    qDebug() << "MY TODO vfs slot job result; time: " << timer.elapsed() << " refresh=" << refresh;
+    timer.start();
 }
 
 void FileSystem::clear(FileItemDict &fileItems)

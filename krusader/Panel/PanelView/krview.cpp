@@ -336,6 +336,7 @@ QPixmap KrView::getIcon(FileItem *fileitem, bool active, int size/*, KRListItem:
                            dim, dimColor, dimFactor, fileitem->isSymLink());
         // insert it into the cache
         QPixmapCache::insert(cacheName, icon);
+        qDebug() << "MY TODO icon; name=" << iconName << " icon=" << icon;
     }
 
     return icon;

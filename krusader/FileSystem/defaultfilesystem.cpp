@@ -41,6 +41,10 @@ void DefaultFileSystem::copyFiles(const QList<QUrl> &urls, const QUrl &destinati
                             KIO::CopyJob::CopyMode mode, bool showProgressInfo,
                             JobMan::StartMode startMode)
 {
+    timer.start();
+
+    qDebug() << "destination=" << destination << "; mode=" << mode;
+
     // resolve relative path before resolving symlinks
     const QUrl dest = resolveRelativePath(destination);
 
@@ -265,6 +269,7 @@ void DefaultFileSystem::slotWatcherCreated(const QString& path)
 void DefaultFileSystem::slotWatcherDirty(const QString& path)
 {
     qDebug() << "path dirty: " << path;
+    qDebug() << "MY TODO timer: " << timer.elapsed();
     if (path == realPath()) {
         // this happens
         //   1. if a directory was created/deleted/renamed inside this directory.
@@ -339,6 +344,7 @@ bool DefaultFileSystem::refreshLocal(const QUrl &directory, bool onlyScan) {
     }
 
     // change directory to the new directory
+    // TODO remove
     const QString savedDir = QDir::currentPath();
     if (!QDir::setCurrent(path)) {
         emit error(i18nc("%1=folder path", "Access to %1 denied", path));

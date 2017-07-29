@@ -534,7 +534,7 @@ void KrSlots::slotCombine()
 
         if (ACTIVE_FUNC->files()->getFileItem(it)->isDir()) {
             KMessageBox::sorry(krApp, i18n("You cannot combine a folder."));
-            return;
+            return ;
         }
 
         if (!unixStyle) {

@@ -27,6 +27,9 @@
 #include "../krservices.h"
 #include "../JobMan/jobman.h"
 
+// MY TODO
+#include <QDebug>
+
 
 FileSystemProvider::FileSystemProvider() : _defaultFileSystem(nullptr), _virtFileSystem(nullptr) {}
 

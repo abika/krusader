@@ -600,6 +600,7 @@ void ListPanelFunc::copyFiles(bool enqueue, bool move)
         return ;  // safety
 
     QUrl destination = panel->otherPanel()->virtualPath();
+    // TODO disable destination is virtual fs
 
     bool fullDestPath = false;
     if (fileNames.count() == 1 && otherFunc()->files()->type() != FileSystem::FS_VIRTUAL) {

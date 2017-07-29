@@ -40,10 +40,12 @@ void KrPreviews::clear()
     _previewsInactive.clear();
 }
 
+// TODO this takes way too long
 void KrPreviews::update()
 {
     if(_job)
         return;
+    //for (KrViewItem *item : _view)
     for (KrViewItem *it = _view->getFirst(); it != nullptr; it = _view->getNext(it)) {
         if(!_previews.contains(it->getFileItem()))
             updatePreview(it);

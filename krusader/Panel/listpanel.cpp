@@ -1082,8 +1082,9 @@ void ListPanel::inlineRefreshInfoMessage(KJob*, const QString &msg)
 
 void ListPanel::inlineRefreshListResult(KJob*)
 {
-    if(inlineRefreshJob)
-        disconnect(inlineRefreshJob, nullptr, this, nullptr);
+    // MY TODO
+    //if(inlineRefreshJob)
+        //disconnect(inlineRefreshJob, 0, this, 0);
     inlineRefreshJob = nullptr;
     // reenable everything
     status->setEnabled(true);
