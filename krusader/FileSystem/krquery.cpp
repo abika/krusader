@@ -259,22 +259,25 @@ bool KrQuery::matchCommon(const QString &nameIn, const QStringList &matchList,
     if (ndx != -1)                     // but the end of the filename is OK
         name = nameIn.mid(ndx + 1);
 
-    for (int i = 0; i < excludeList.count(); ++i) {
-        if (QRegExp(excludeList[i], matchesCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive,
-                    QRegExp::Wildcard)
-                .exactMatch(name))
+     const Qt::CaseSensitivity caseSensitivity =
+             matchesCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+
+    for (const QString exclude : excludeList) {
+        if (QRegExp(exclude, caseSensitivity, QRegExp::Wildcard).exactMatch(name)) {
             return false;
+        }
     }
 
-    if (matchList.count() == 0)
+    if (matchList.count() == 0) {
         return true;
-
-    for (int i = 0; i < matchList.count(); ++i) {
-        if (QRegExp(matchList[i], matchesCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive,
-                    QRegExp::Wildcard)
-                .exactMatch(name))
-            return true;
     }
+
+    for (const QString match : matchList) {
+        if (QRegExp(match, caseSensitivity, QRegExp::Wildcard).exactMatch(name)) {
+            return true;
+        }
+    }
+
     return false;
 }
 
